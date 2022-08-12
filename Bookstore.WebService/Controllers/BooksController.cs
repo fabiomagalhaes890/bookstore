@@ -66,7 +66,7 @@ namespace Bookstore.WebService.Controllers
         {
             try
             {
-                var result = await _bookApplicationService.Update(id, bookDto);
+                var result = await _bookApplicationService.Update(bookDto);
 
                 if (result == null)
                     return NotFound();
@@ -79,7 +79,7 @@ namespace Bookstore.WebService.Controllers
             }
         }
 
-        [HttpDelete("{id}", Name = "GetBook")]
+        [HttpDelete("{id}", Name = "DeleteBook")]
         public async Task<ActionResult<IEnumerable<BookDto>>> Delete(Guid id)
         {
             try

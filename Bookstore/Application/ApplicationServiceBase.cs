@@ -51,14 +51,9 @@ namespace Bookstore.Application
                 _repositoryBase.RemoveAsync(entity);
         }
 
-        public async Task<TModel> Update(Guid id, TModel model)
+        public async Task<TModel> Update(TModel model)
         {
-            var entity = await _repositoryBase.Get(id);
-
-            if (entity == null)
-                return null;
-
-            entity = _mapper.Map<TEntity>(model);            
+            var entity = _mapper.Map<TEntity>(model);            
             var result = await _repositoryBase.Update(entity);
 
             return _mapper.Map<TModel>(result);

@@ -12,7 +12,11 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.RegisterServices();
-builder.Services.AddDbContext<BookstoreContext>(opt => opt.UseInMemoryDatabase("BookstoreDb"));
+builder.Services.AddDbContext<BookstoreContext>(opt =>
+{
+    opt.UseInMemoryDatabase("BookstoreDb");
+    opt.EnableSensitiveDataLogging();
+});
 
 var app = builder.Build();
 
