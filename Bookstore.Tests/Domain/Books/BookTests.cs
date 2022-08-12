@@ -7,8 +7,8 @@ namespace Bookstore.Tests.Domain.Books
     [TestClass]
     public class BookTests
     {
-        [TestMethod]
-        public void Create_WithCorrectInformationsReturnsConstructedProduct()
+        [TestMethod, TestCategory("Unit")]
+        public void Create_WithCorrectInformationsReturnsConstructedBook()
         {
             var expected = new Mock<Book>();
 
@@ -21,14 +21,14 @@ namespace Bookstore.Tests.Domain.Books
                 opt => opt.Excluding(x => x.Id));
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory("Unit")]
         [ExpectedException(typeof(ArgumentNullException), "The Book must have name to be registered.")]
         public void Create_WithoutNameReturnsArgumentNullException()
         {
             var actual = Book.Create(string.Empty, 29);
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory("Unit")]
         [ExpectedException(typeof(ArgumentException), "The Book price must be greather than 0.")]
         public void Create_WithPriceEqual0ReturnsArgumentException()
         {
