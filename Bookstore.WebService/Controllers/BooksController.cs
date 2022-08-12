@@ -61,8 +61,8 @@ namespace Bookstore.WebService.Controllers
             }
         }
 
-        [HttpPut("{id}", Name = "PutBook")]
-        public async Task<ActionResult<IEnumerable<BookDto>>> Get(Guid id, BookDto bookDto)
+        [HttpPut(Name = "PutBook")]
+        public async Task<ActionResult<IEnumerable<BookDto>>> Get(BookDto bookDto)
         {
             try
             {
