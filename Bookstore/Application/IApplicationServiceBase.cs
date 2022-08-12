@@ -8,7 +8,7 @@ namespace Bookstore.Application
         Task<TModel?> Get(Guid id);
         Task<IEnumerable<TModel>> GetAll();
         Task<TModel> Add(TModel entity);
-        Task<TModel> Update(TModel entity);
+        Task<TModel> Update(Guid id, TModel entity);
         void RemoveAsync(TModel entity);
     }
 }

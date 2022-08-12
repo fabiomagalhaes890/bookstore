@@ -107,8 +107,8 @@ namespace Bookstore.Tests.Application.Books
 
             var book = GetBook("Clean Code", 29.9m).Result;
             var bookDto = _mapper.Map<BookDto>(book);
-
-            var actual = _bookApplicationService.Update(It.IsAny<BookDto>()).Result;
+            
+            var actual = _bookApplicationService.Update(It.IsAny<Guid>(), bookDto).Result;
             actual.Should().BeEquivalentTo(expected.Object,
                 opt => opt.Excluding(x => x.Id));
         }
@@ -120,7 +120,7 @@ namespace Bookstore.Tests.Application.Books
             var book = GetBook(string.Empty, 0m);
             _bookRepository.Setup(x => x.Update(It.IsAny<Book>())).Returns(book);
 
-            var actual = _bookApplicationService.Update(It.IsAny<BookDto>()).Result;
+            var actual = _bookApplicationService.Update(It.IsAny<Guid>(), It.IsAny<BookDto>()).Result;
         }
 
         private static async Task<IEnumerable<Book>> GetBooks()
