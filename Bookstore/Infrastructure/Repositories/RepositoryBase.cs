@@ -39,7 +39,7 @@ namespace Bookstore.Infrastructure.Repositories
             if (_context.Entry(entity).State == EntityState.Detached)
             {
                 Set.Attach(entity);
-                //_context.Attach(entity);
+                _context.Attach(entity);
                 _context.Entry(entity).State = EntityState.Modified;
             }
 
