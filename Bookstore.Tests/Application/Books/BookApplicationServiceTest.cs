@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Bookstore.Application.Books;
 using Bookstore.Domain.Books;
-using Bookstore.Help.Configs;
 using Bookstore.Infrastructure.Repositories.Books;
 using FluentAssertions;
 using Moq;
@@ -27,10 +26,10 @@ namespace Bookstore.Tests.Application.Books
             _bookRepository.Setup(x => x.Add(It.IsAny<Book>())).Returns(book);
             _bookRepository.Setup(x => x.Update(It.IsAny<Book>())).Returns(book);
 
-            _bookApplicationService = new BookApplicationService(_bookRepository.Object);
+            var configuration = new MapperConfiguration(cfg => cfg.AddMaps(typeof(Book).Assembly, typeof(BookDto).Assembly));
+            _mapper = new Mapper(configuration);;
 
-            var configMap = ConfigurationMap.RegisterMappings();
-            _mapper = configMap.CreateMapper();
+            _bookApplicationService = new BookApplicationService(_bookRepository.Object, _mapper);
         }
 
         [TestMethod, TestCategory("Unit")]

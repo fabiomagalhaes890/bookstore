@@ -1,10 +1,16 @@
-﻿using Bookstore.Infrastructure.Base;
+﻿using AutoMapper;
+using AutoMapper.Configuration.Annotations;
+using Bookstore.Application.Books;
+using Bookstore.Infrastructure.Base;
 
 namespace Bookstore.Domain.Books
 {
+    [AutoMap(typeof(BookDto))]
     public class Book : Entity
     {
+        [SourceMember(nameof(Book.Name))]
         public virtual string? Name { get; set; }
+        [SourceMember(nameof(Book.Price))]
         public virtual decimal Price { get; set; }
 
         public static Book Create(string name, decimal price)
