@@ -1,6 +1,6 @@
 ﻿using Bookstore.Infrastructure.Models;
 
-namespace Bookstore.Application.Books
+namespace Bookstore.Application.Books.GetBooksDetails
 {
     public class BookDto : Model
     {

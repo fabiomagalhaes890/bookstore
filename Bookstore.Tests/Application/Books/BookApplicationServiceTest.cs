@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Bookstore.Application.Books;
+using Bookstore.Application.Books.GetBooksDetails;
 using Bookstore.Domain.Books;
 using Bookstore.Help.Configs;
 using Bookstore.Infrastructure.Repositories.Books;

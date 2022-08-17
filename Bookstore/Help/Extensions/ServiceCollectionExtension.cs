@@ -1,5 +1,6 @@
 ﻿using Bookstore.Application;
 using Bookstore.Application.Books;
+using Bookstore.Application.Books.GetBooksDetails;
 using Bookstore.Domain.Books;
 using Bookstore.Infrastructure.Base;
 using Bookstore.Infrastructure.Repositories;

@@ -1,4 +1,5 @@
-﻿using Bookstore.Domain.Books;
+﻿using Bookstore.Application.Books.GetBooksDetails;
+using Bookstore.Domain.Books;
 using Bookstore.Infrastructure.Repositories;
 
 namespace Bookstore.Application.Books
