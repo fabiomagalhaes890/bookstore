@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Bookstore.Help.Configs;
 using Bookstore.Infrastructure.Base;
 using Bookstore.Infrastructure.Models;
 using Bookstore.Infrastructure.Repositories;
@@ -10,11 +9,12 @@ namespace Bookstore.Application
     {
         private readonly IRepositoryBase<TEntity> _repositoryBase;
         private readonly IMapper _mapper;
-        public ApplicationServiceBase(IRepositoryBase<TEntity> repositoryBase)
+        public ApplicationServiceBase(
+            IRepositoryBase<TEntity> repositoryBase,
+            IMapper mapper)
         {
             _repositoryBase = repositoryBase;
-            var configMap = ConfigurationMap.RegisterMappings();
-            _mapper = configMap.CreateMapper();
+            _mapper = mapper;
         }
 
         public async Task<TModel> Add(TModel model)

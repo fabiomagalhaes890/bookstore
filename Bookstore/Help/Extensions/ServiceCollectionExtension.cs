@@ -25,5 +25,12 @@ namespace Bookstore.Help.Extensions
 
             return serviceCollection;
         }
+
+        public static IServiceCollection RegisterMapping(this IServiceCollection serviceCollection)
+        {
+            serviceCollection.AddAutoMapper(cfg => cfg.AddMaps(typeof(Book).Assembly, typeof(BookDto).Assembly));
+
+            return serviceCollection;
+        }
     }
 }
