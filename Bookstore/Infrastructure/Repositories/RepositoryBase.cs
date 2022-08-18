@@ -71,6 +71,13 @@ namespace Bookstore.Infrastructure.Repositories
             if (Set == null)
                 throw new Exception();
 
+            if (_context.Entry(entity).State == EntityState.Detached)
+            {
+                Set.Attach(entity);
+                _context.Attach(entity);
+                _context.Entry(entity).State = EntityState.Modified;
+            }
+
             Set.Remove(entity);
             await _context.SaveChangesAsync();
         }
