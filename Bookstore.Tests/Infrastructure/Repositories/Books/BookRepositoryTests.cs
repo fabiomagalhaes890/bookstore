@@ -72,15 +72,11 @@ namespace Bookstore.Tests.Infrastructure.Repositories.Books
         [TestMethod, TestCategory("Data")]
         public void Remove_BookByIdReturnsNull()
         {
-            var expected = _books.First();
-            var actual = _bookRepository.Get(expected.Id).Result;
-            actual.Should().BeEquivalentTo(expected);
-
-            if (actual == null)
-                return;
-
-            _bookRepository.RemoveAsync(actual);
-            actual = _bookRepository.Get(actual.Id).Result;
+            var book = _books.First();
+            
+            _books.Remove(book);
+            _bookRepository.RemoveAsync(book);
+            var actual = _bookRepository.Get(book.Id).Result;
 
             actual.Should().BeNull();
         }
