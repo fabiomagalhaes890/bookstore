@@ -1,12 +1,12 @@
 ﻿using Bookstore.Help.Configurations.Commands;
 
-namespace Bookstore.Application.Books.RemoveBooks
+namespace Bookstore.Application.Books.DeleteBooks
 {
-    public class RemoveBookCommand : CommandBase
+    public class DeleteBookCommand : CommandBase
     {
         public Guid BookId { get; set; }
 
-        public RemoveBookCommand(Guid bookId)
+        public DeleteBookCommand(Guid bookId)
         {
             BookId = bookId;
         }

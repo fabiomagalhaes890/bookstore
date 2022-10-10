@@ -9,30 +9,33 @@ using System.Reflection;
 
 namespace Bookstore.Application.Books.GetBooksDetails
 {
-    public class GetBookDetailsQueryHandler : IQueryHandler<GetBookDetailsQuery, BookResponse>
+    public class GetBooksQueryHandler : IQueryHandler<GetBooksQuery, IEnumerable<BookResponse>>
     {
         private readonly IRepositoryBase<Book> _repository;
         private readonly IMapper _mapper;
 
-        public GetBookDetailsQueryHandler(
+        public GetBooksQueryHandler(
             IRepositoryBase<Book> repository)
         {
             _repository = repository;
             _mapper = ConfigurationMap.CreateMap();
         }
 
-        public async Task<BookResponse> Handle(GetBookDetailsQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<BookResponse>> Handle(GetBooksQuery request, CancellationToken cancellationToken)
         {
-            var entity = await _repository.Get(request.BookId);
+            var entities = await _repository.GetAll();
+
+            if (entities == null)
+                return Enumerable.Empty<BookResponse>();
 
             try
             {
-                var response = _mapper.Map<BookResponse>(entity);
-                return response;
+                var result = _mapper.Map<BookResponse[]>(entities);
+                return result;
             }
             catch (Exception ex)
             {
-                throw new MapException("An error was encountered while mapping an entity " + typeof(Book).GetTypeInfo().Name + " to the response.", ex);
+                throw new MapException("An error was encountered while mapping an entity " + typeof(Book).GetTypeInfo().Name + " list to the response.", ex);
             }
         }
     }

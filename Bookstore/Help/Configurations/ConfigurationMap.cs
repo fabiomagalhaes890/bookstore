@@ -17,5 +17,16 @@ namespace Bookstore.Help.Configs
                 config.AddProfile(new DtoToEntity());
             });
         }
+
+        public static IMapper CreateMap()
+        {
+            var configurationMap = new MapperConfiguration(config =>
+            {
+                config.AddProfile(new EntityToDto());
+                config.AddProfile(new DtoToEntity());
+            });
+
+            return configurationMap.CreateMapper();
+        }
     }
 }

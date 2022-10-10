@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Bookstore.Application.Books.GetBooksDetails;
+using Bookstore.Application.Responses;
 using Bookstore.Domain.Books;
 
 namespace Bookstore.Help.Configs
@@ -8,7 +8,7 @@ namespace Bookstore.Help.Configs
     {
         public EntityToDto()
         {
-            CreateMap<Book, BookDto>();
+            CreateMap<Book, BookResponse>();
         }
     }
 }

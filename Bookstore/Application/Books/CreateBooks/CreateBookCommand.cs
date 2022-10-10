@@ -1,14 +1,15 @@
 ﻿using Bookstore.Application.Books.GetBooksDetails;
+using Bookstore.Application.Responses;
 using Bookstore.Help.Configurations.Commands;
 
 namespace Bookstore.Application.Books.CreateBooks
 {
-    public class RegisterBookCommand : CommandBase<BookDto>
+    public class CreateBookCommand : CommandBase<BookResponse>
     {
         public string? Name { get; set; }
         public decimal Price { get; set; }
 
-        public RegisterBookCommand(string? name, decimal price)
+        public CreateBookCommand(string? name, decimal price)
         {
             Name = name;
             Price = price;

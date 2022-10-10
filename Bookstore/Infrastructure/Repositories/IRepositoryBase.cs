@@ -7,7 +7,7 @@ namespace Bookstore.Infrastructure.Repositories
         Task<TEntity?> Get(Guid id);
         Task<IEnumerable<TEntity>> GetAll();
         Task<TEntity> Add(TEntity entity);
-        Task<TEntity> Update(TEntity entity);
+        void Update(TEntity entity);
         void RemoveAsync(TEntity entity);
     }
 }

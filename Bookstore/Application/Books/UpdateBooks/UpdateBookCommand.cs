@@ -1,15 +1,15 @@
 ﻿using Bookstore.Help.Configurations.Commands;
 using MediatR;
 
-namespace Bookstore.Application.Books.ChangeBooks
+namespace Bookstore.Application.Books.UpdateBooks
 {
-    public class ChangeBookCommand : CommandBase<Unit>
+    public class UpdateBookCommand : CommandBase
     {
         public Guid BookId { get; set; }
         public string? Name { get; set; }
         public decimal Price { get; set; }
 
-        public ChangeBookCommand(Guid bookId, string? name, decimal price)
+        public UpdateBookCommand(Guid bookId, string? name, decimal price)
         {
             BookId = bookId;
             Name = name;

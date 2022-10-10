@@ -1,11 +1,11 @@
-﻿using Bookstore.Application.Books;
-using Bookstore.Application.Books.ChangeBooks;
-using Bookstore.Application.Books.CreateBooks;
+﻿using Bookstore.Application.Books.CreateBooks;
+using Bookstore.Application.Books.DeleteBooks;
 using Bookstore.Application.Books.GetBooksDetails;
-using Bookstore.Application.Books.RemoveBooks;
+using Bookstore.Application.Books.UpdateBooks;
+using Bookstore.Application.Responses;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 using System.Net;
 
 namespace Bookstore.WebService.Controllers
@@ -14,130 +14,51 @@ namespace Bookstore.WebService.Controllers
     [ApiController]
     public class BooksController : ControllerBase
     {
-        private readonly IBookApplicationService _bookApplicationService;
         private readonly IMediator _mediator;
 
-        public BooksController(IBookApplicationService bookApplicationService, IMediator mediator)
+        public BooksController(IMediator mediator)
         {
-            _bookApplicationService = bookApplicationService;
             _mediator = mediator;
         }
 
-        [HttpGet(Name = "GetAllBooks")]
-        public async Task<ActionResult<IEnumerable<BookDto>>> GetAll()
-        {
-            try
-            {
-                var result = await _bookApplicationService.GetAll();
-                return Ok(result);
-            }
-            catch (Exception)
-            {
-                return BadRequest();
-            }
-        }
-
-        [HttpGet("{id}", Name = "GetBook")]
-        public async Task<ActionResult<IEnumerable<BookDto>>> Get(Guid id)
-        {
-            try
-            {
-                var result = await _bookApplicationService.Get(id);
-
-                if (result == null)
-                    return NotFound();
-
-                return Ok(result);
-            }
-            catch (Exception)
-            {
-                return BadRequest();
-            }
-        }
-
-        [HttpPost(Name = "PostBook")]
-        public async Task<ActionResult<IEnumerable<BookDto>>> Post(BookDto bookDto)
-        {
-            try
-            {
-                var result = await _bookApplicationService.Add(bookDto);
-                return Ok(result);
-            }
-            catch (Exception)
-            {
-                return BadRequest();
-            }
-        }
-
-        [HttpPut(Name = "PutBook")]
-        public async Task<ActionResult<IEnumerable<BookDto>>> Get(BookDto bookDto)
-        {
-            try
-            {
-                var result = await _bookApplicationService.Update(bookDto);
-
-                if (result == null)
-                    return NotFound();
-
-                return Ok(result);
-            }
-            catch (Exception)
-            {
-                return BadRequest();
-            }
-        }
-
-        [HttpDelete("{id}", Name = "DeleteBook")]
-        public async Task<ActionResult<IEnumerable<BookDto>>> Delete(Guid id)
-        {
-            try
-            {
-                var result = await _bookApplicationService.Get(id);
-
-                if (result == null)
-                    return NotFound();
-
-                _bookApplicationService.RemoveAsync(result);
-
-                return Ok(result);
-            }
-            catch (Exception)
-            {
-                return BadRequest();
-            }
-        }
-
-        // using cqrs
         [HttpPost(Name = "CreateBook")]
-        [ProducesResponseType(typeof(BookDto), (int)HttpStatusCode.Created)]
-        public async Task<IActionResult> RegisterBook([FromBody]RegisterBookRequest request)
+        [ProducesResponseType(typeof(BookResponse), (int)HttpStatusCode.Created)]
+        public async Task<IActionResult> Create([FromBody] CreateBookCommand request)
         {            
-            var book = await _mediator.Send(new RegisterBookCommand(request.Name, request.Price));
+            var book = await _mediator.Send(new CreateBookCommand(request.Name, request.Price));
             return Created(string.Empty, book);
         }
 
-        [HttpGet("{id}", Name = "GetBooks")]
-        [ProducesResponseType(typeof(List<BookDto>), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetBooks([FromRoute]Guid bookId)
+        [HttpGet("{id}")]
+        [ProducesResponseType(typeof(List<BookResponse>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetById([FromRoute]Guid bookId)
         {
             var books = await _mediator.Send(new GetBookDetailsQuery(bookId));
             return Ok(books);
         }
 
-        [HttpPut("{id}", Name = "UpdateBook")]
-        [ProducesResponseType(typeof(List<BookDto>), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> UpdateBook([FromRoute] Guid bookId, [FromBody] RegisterBookRequest request)
+        [HttpGet]
+        [ProducesResponseType(typeof(List<BookResponse>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetAll()
         {
-            await _mediator.Send(new ChangeBookCommand(bookId, request.Name, request.Price));
-            return Ok();
+            var books = await _mediator.Send(new GetBooksQuery());
+            return Ok(books);
         }
 
-        [HttpDelete("{id}", Name = "RemoveBook")]
-        [ProducesResponseType(typeof(List<BookDto>), (int)HttpStatusCode.OK)]
+        [HttpPut("{id}")]
+        [ProducesResponseType((int)HttpStatusCode.NoContent)]
+        public async Task<IActionResult> Update([FromRoute] Guid bookId, [FromBody] UpdateBookCommand request)
+        {
+            await _mediator.Send(new UpdateBookCommand(bookId, request.Name, request.Price));
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        [ProducesResponseType((int)HttpStatusCode.NoContent)]
         public async Task<IActionResult> RemoveBook([FromRoute] Guid bookId)
         {
-            await _mediator.Send(new RemoveBookCommand(bookId));
-            return Ok();
+            await _mediator.Send(new DeleteBookCommand(bookId));
+            return NoContent();
         }
     }
 }
