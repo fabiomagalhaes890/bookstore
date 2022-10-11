@@ -13,6 +13,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.RegisterServices();
+builder.Services.RegisterMapping();
 builder.Services.AddDbContext<BookstoreContext>(opt =>
 {
     opt.UseInMemoryDatabase("BookstoreDb");

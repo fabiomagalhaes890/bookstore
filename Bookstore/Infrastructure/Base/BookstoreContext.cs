@@ -1,4 +1,4 @@
-﻿using Bookstore.Help.Mappings;
+﻿using Bookstore.Domain.Books;
 using Microsoft.EntityFrameworkCore;
 
 namespace Bookstore.Infrastructure.Base
@@ -7,11 +7,14 @@ namespace Bookstore.Infrastructure.Base
     {
         public BookstoreContext(DbContextOptions<BookstoreContext> opt) : base(opt) { }
 
+        public DbSet<Book>? Books { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.ApplyConfiguration(new BookMapping());
-
             base.OnModelCreating(builder);
+
+            var assembly = typeof(Book).Assembly;
+            builder.ApplyConfigurationsFromAssembly(assembly);
         }
     }
 }
