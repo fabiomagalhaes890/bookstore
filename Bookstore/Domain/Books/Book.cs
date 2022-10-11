@@ -21,19 +21,27 @@ namespace Bookstore.Domain.Books
         [SourceMember(nameof(Book.Price))]        
         public virtual decimal Price { get; set; }
 
-        public static Book Create(string name, decimal price)
+        public static Book Create(string? name, decimal price)
         {
-            if (string.IsNullOrWhiteSpace(name))
-                throw new ArgumentNullException("The Book must have name to be registered.");
-
-            if (price <= 0)
-                throw new ArgumentException("The Book price must be greather than 0.");
-
-            return new Book()
+            if (!string.IsNullOrWhiteSpace(name))
             {
-                Name = name,
-                Price = price
-            };
+                if (price <= 0)
+                    throw new ArgumentException("The Book price must be greather than 0.");
+
+                return new Book()
+                {
+                    Name = name,
+                    Price = price
+                };
+            }
+
+            throw new ArgumentException("The Book must have name to be registered.");
+        }
+
+        public void Update(string? name, decimal price)
+        {
+            Name = name;
+            Price = price;
         }
     }
 }

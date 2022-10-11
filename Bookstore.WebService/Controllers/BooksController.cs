@@ -1,6 +1,12 @@
-﻿using Bookstore.Application.Books;
-using Microsoft.AspNetCore.Http;
+﻿using Bookstore.Application.Books.CreateBooks;
+using Bookstore.Application.Books.DeleteBooks;
+using Bookstore.Application.Books.GetBooksDetails;
+using Bookstore.Application.Books.UpdateBooks;
+using Bookstore.Application.Responses;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
+using System.Net;
 
 namespace Bookstore.WebService.Controllers
 {
@@ -8,95 +14,51 @@ namespace Bookstore.WebService.Controllers
     [ApiController]
     public class BooksController : ControllerBase
     {
-        private readonly IBookApplicationService _bookApplicationService;
+        private readonly IMediator _mediator;
 
-        public BooksController(IBookApplicationService bookApplicationService)
+        public BooksController(IMediator mediator)
         {
-            _bookApplicationService = bookApplicationService;
+            _mediator = mediator;
         }
 
-        [HttpGet(Name = "GetAllBooks")]
-        public async Task<ActionResult<IEnumerable<BookDto>>> GetAll()
-        {
-            try
-            {
-                var result = await _bookApplicationService.GetAll();
-                return Ok(result);
-            }
-            catch (Exception)
-            {
-                return BadRequest();
-            }
+        [HttpPost(Name = "CreateBook")]
+        [ProducesResponseType(typeof(BookResponse), (int)HttpStatusCode.Created)]
+        public async Task<IActionResult> Create([FromBody] CreateBookCommand request)
+        {            
+            var book = await _mediator.Send(new CreateBookCommand(request.Name, request.Price));
+            return Created(string.Empty, book);
         }
 
-        [HttpGet("{id}", Name = "GetBook")]
-        public async Task<ActionResult<IEnumerable<BookDto>>> Get(Guid id)
+        [HttpGet("{id}")]
+        [ProducesResponseType(typeof(List<BookResponse>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetById([FromRoute]Guid bookId)
         {
-            try
-            {
-                var result = await _bookApplicationService.Get(id);
-
-                if (result == null)
-                    return NotFound();
-
-                return Ok(result);
-            }
-            catch (Exception)
-            {
-                return BadRequest();
-            }
+            var books = await _mediator.Send(new GetBookDetailsQuery(bookId));
+            return Ok(books);
         }
 
-        [HttpPost(Name = "PostBook")]
-        public async Task<ActionResult<IEnumerable<BookDto>>> Post(BookDto bookDto)
+        [HttpGet]
+        [ProducesResponseType(typeof(List<BookResponse>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetAll()
         {
-            try
-            {
-                var result = await _bookApplicationService.Add(bookDto);
-                return Ok(result);
-            }
-            catch (Exception)
-            {
-                return BadRequest();
-            }
+            var books = await _mediator.Send(new GetBooksQuery());
+            return Ok(books);
         }
 
-        [HttpPut(Name = "PutBook")]
-        public async Task<ActionResult<IEnumerable<BookDto>>> Get(BookDto bookDto)
+        [HttpPut("{id}")]
+        [ProducesResponseType((int)HttpStatusCode.NoContent)]
+        public async Task<IActionResult> Update([FromRoute] Guid bookId, [FromBody] UpdateBookCommand request)
         {
-            try
-            {
-                var result = await _bookApplicationService.Update(bookDto);
-
-                if (result == null)
-                    return NotFound();
-
-                return Ok(result);
-            }
-            catch (Exception)
-            {
-                return BadRequest();
-            }
+            await _mediator.Send(new UpdateBookCommand(bookId, request.Name, request.Price));
+            return NoContent();
         }
 
-        [HttpDelete("{id}", Name = "DeleteBook")]
-        public async Task<ActionResult<IEnumerable<BookDto>>> Delete(Guid id)
+        [HttpDelete("{id}")]
+        [ProducesResponseType((int)HttpStatusCode.NoContent)]
+        public async Task<IActionResult> RemoveBook([FromRoute] Guid bookId)
         {
-            try
-            {
-                var result = await _bookApplicationService.Get(id);
-
-                if (result == null)
-                    return NotFound();
-
-                _bookApplicationService.RemoveAsync(result);
-
-                return Ok(result);
-            }
-            catch (Exception)
-            {
-                return BadRequest();
-            }
+            await _mediator.Send(new DeleteBookCommand(bookId));
+            return NoContent();
         }
     }
 }

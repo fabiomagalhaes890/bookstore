@@ -1,3 +1,4 @@
+using Bookstore.Help.Errors;
 using Bookstore.Help.Extensions;
 using Bookstore.Infrastructure.Base;
 using Microsoft.EntityFrameworkCore;
@@ -35,6 +36,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseMiddleware(typeof(ErrorHandlingMiddleware));
 
 app.UseAuthorization();
 
